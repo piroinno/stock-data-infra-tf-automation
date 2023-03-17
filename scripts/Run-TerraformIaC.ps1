@@ -90,8 +90,7 @@ begin {
         Write-Verbose "Automation is not configured"
     }
     $TF_LOCK_TIMEOUT = "300s"
-    $TF_WORKING_FOLDER = (New-Guid).Guid
-    $TF_WORKING_TEMP_PATH = (Set-PathSlashes(("{0}/{1}" -f $TerraformWorkingPath, (New-Guid).Guid))) 
+    $TF_WORKING_TEMP_PATH = $TerraformWorkingPath
     Write-Verbose "Setting TerraformConfigPath"
     $TerraformConfigPath = (Set-PathSlashes(("{0}/{1}" -f $LandingZoneNameRootPath, $ConfigurationFolder)))
     if (Test-Path -Path $TerraformConfigPath) {
@@ -125,10 +124,10 @@ begin {
     Set-Location -Path $TF_WORKING_TEMP_PATH
 
     Write-Verbose "Copying Resource Files from $TerraformConfigPath to $TF_WORKING_TEMP_PATH"
-    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformConfigPath))) -Destination $TF_WORKING_TEMP_PATH -Exclude $TF_WORKING_FOLDER, "envs", ".terraform" -Force -Verbose
+    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformConfigPath))) -Destination $TF_WORKING_TEMP_PATH -Exclude "envs", ".terraform" -Force -Verbose
 
     Write-Verbose "Copying Terraform Variables from $TerraformTfVarsPath to $TF_WORKING_TEMP_PATH"
-    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformTfVarsPath))) -Destination $TF_WORKING_TEMP_PATH -Exclude $TF_WORKING_FOLDER -Force -Verbose
+    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformTfVarsPath))) -Destination $TF_WORKING_TEMP_PATH -Force -Verbose
     
     Write-Verbose "Listing Files in $TF_WORKING_TEMP_PATH"
     Get-Item -Path (Set-PathSlashes(("{0}\*" -f $TF_WORKING_TEMP_PATH)))
