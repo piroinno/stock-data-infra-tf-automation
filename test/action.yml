@@ -28,6 +28,10 @@ inputs:
     description: 'Checkov config file'
     required: false
     default: ""
+  baselinefile:
+    description: 'Checkov baseline file'
+    required: false
+    default: ".checkov.baseline"
     
 runs:
   using: "composite"
@@ -57,5 +61,5 @@ runs:
       var_file: ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}/envs/${{ env.ENVIROMENT }}
       log_level: ${{ inputs.loglevel }}
       config_file: ${{ inputs.config_file }}
-      baseline: ${{ env.TF_AUTO_WORKING_PATH }}
+      baseline: ${{ inputs.baselinefile }}
       use_enforcement_rules: false
