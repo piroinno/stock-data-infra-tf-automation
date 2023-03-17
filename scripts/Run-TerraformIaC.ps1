@@ -93,7 +93,7 @@ begin {
     $TF_WORKING_FOLDER = (New-Guid).Guid
     $TF_WORKING_TEMP_PATH = (Set-PathSlashes(("{0}/{1}" -f $TerraformWorkingPath, (New-Guid).Guid))) 
     Write-Verbose "Setting TerraformConfigPath"
-    $TerraformConfigPath = Set-PathSlashes(("{0}/{1}" -f $LandingZoneNameRootPath, $ConfigurationFolder))
+    $TerraformConfigPath = (Set-PathSlashes(("{0}/{1}" -f $LandingZoneNameRootPath, $ConfigurationFolder)))
     if (Test-Path -Path $TerraformConfigPath) {
         Write-Verbose "TerraformConfigPath: $TerraformConfigPath"
     }
@@ -101,6 +101,7 @@ begin {
         Write-Error "TerraformConfigPath: $TerraformConfigPath does not exist"
     }
 
+    Write-Verbose "Setting TerraformTfVarsPath"
     $TerraformTfVarsPath = (Set-PathSlashes(("{0}/{1}/envs/{2}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment)))
     if (Test-Path -Path $TerraformTfVarsPath) {
         Write-Verbose "TerraformTfVarsPath: $TerraformTfVarsPath"
@@ -109,6 +110,7 @@ begin {
         Write-Error "TerraformTfVarsPath: $TerraformTfVarsPath does not exist"
     }
 
+    Write-Verbose "Setting TerraformTfBackendPath"
     $TerraformTfBackendPath = (Set-PathSlashes(("{0}/{1}/envs/{2}/{3}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment, "tf.backend")))
     if (Test-Path -Path $TerraformTfBackendPath) {
         Write-Verbose "TerraformTfBackendPath: $TerraformTfBackendPath"
@@ -117,9 +119,10 @@ begin {
         Write-Error "TerraformTfBackendPath: $TerraformTfBackendPath does not exist"
     }
 
+    Write-Verbose "Setting working directory to $TF_WORKING_TEMP_PATH"
     New-Item -Path $TF_WORKING_TEMP_PATH -ItemType Directory -Force
     Set-Location -Path $TF_WORKING_TEMP_PATH
-    Write-Verbose "TF_WORKING_TEMP_PATH: $TF_WORKING_TEMP_PATH"
+
     Write-Verbose "Copying Resource Files from $TerraformConfigPath to $TF_WORKING_TEMP_PATH"
     Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformConfigPath))) -Destination $TF_WORKING_TEMP_PATH -Exclude $TF_WORKING_FOLDER, "envs", ".terraform" -Force -Verbose
 
@@ -130,17 +133,17 @@ begin {
     Get-Item -Path (Set-PathSlashes(("{0}\*" -f $TF_WORKING_TEMP_PATH)))
 
     # Adding taint feature
-    if ((Test-Path -Path (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tftaint")))) -eq $true) {
+    if ((Test-Path -Path (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tftaint"))))) {
         $TaintedResources = Get-Content Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tftaint"))
     }
 
     # Adding import feature
-    if ((Test-Path -Path (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tfstateimport")))) -eq $true) {
+    if ((Test-Path -Path (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tfstateimport"))))) {
         $ImportedResources = Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tfstateimport"))
     }
 
     # Adding delete feature
-    if ((Test-Path -Path (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tfstateimport")))) -eq $true) {
+    if ((Test-Path -Path (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tfstateimport"))))) {
         $DeletedResources = Get-Content (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tfstateimport")))
     }
 }
