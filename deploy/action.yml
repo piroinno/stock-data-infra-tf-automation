@@ -35,7 +35,7 @@ runs:
         path: ${{ inputs.terraformconfigplanfilepath }}
 
     - name: Deploying Terraform
-      if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' }}
+      if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/uat' || github.ref == 'refs/heads/main' }}
       shell: pwsh
       run: |
         # dirty hack to get the path to the action
