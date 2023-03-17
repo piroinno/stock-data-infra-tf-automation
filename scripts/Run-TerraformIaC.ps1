@@ -179,7 +179,8 @@ process {
             break
         }
         apply {
-            Invoke-Expression("terraform apply $TerraformConfigPlanFilePath -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT")
+            Copy-Item -Path ((Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPlanFilePath, $TerraformConfigPlanFile)))) -Destination ((Set-PathSlashes((".\{0}" -f $TerraformConfigPlanFile))))  -Force -Verbose
+            Invoke-Expression("terraform apply $((Set-PathSlashes(("./{1}" -f $TerraformConfigPlanFile)))) -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT")
             break
         }
         default {
