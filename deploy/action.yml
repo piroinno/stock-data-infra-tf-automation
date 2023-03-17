@@ -23,7 +23,8 @@ runs:
       shell: bash
       run: |
         ls -R
-        ls -la
+        ls -la tfplan
+        unzip tfplan
       working-directory: ${{ env.TF_AUTO_WORKING_PATH }}
     - name: Deploying Terraform
       shell: pwsh
