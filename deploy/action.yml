@@ -39,7 +39,7 @@ runs:
       if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' }}
       shell: pwsh
       run: |
-        .${{ github.action_path }}/scripts/Run-Terraform.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
+        ${{ github.workspace }}/${{ github.action_repository}}/scripts/Run-Terraform.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
         -ConfigurationFolder ${{ inputs.configurationfolder }} `
         -Environment ${{ inputs.environment }} `
         -TerraformPhase ${{ inputs.terraformphase }} `
