@@ -45,7 +45,7 @@ runs:
         -ConfigurationFolder ${{ inputs.configurationfolder }} `
         -Environment ${{ inputs.environment }} `
         -TerraformPhase ${{ inputs.terraformphase }} `
-        -AutomatedRun:$([bool]::Parse(${{ inputs.automatedrun }})) `
+        -AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}")) `
         -TerraformConfigPlanFilePath ${{ inputs.terraformconfigplanfilepath }} `
         -TerraformConfigPlanFile ${{ inputs.terraformconfigplanfile }}
         -TerraformWorkingPath ${{ inputs.terraformworkingpath }}
