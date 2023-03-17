@@ -36,7 +36,7 @@ runs:
     #if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
     uses: actions/download-artifact@v3
     with:
-      name: ${{ env.TF_AUTO_WORKING_PATH }}/
+      name: ${{ env.TF_PLAN_FILE }}
       path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
 
   - name: Run Checkov action
