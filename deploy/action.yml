@@ -19,8 +19,13 @@ runs:
       with:
         name: ${{ env.TF_PLAN_FILE }}
         path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
-
-    - name: Deploying Terraform  
+    - name: Display structure of downloaded files
+      shell: bash
+      run: |
+        ls -R
+        ls -la
+      working-directory: ${{ env.TF_AUTO_WORKING_PATH }}
+    - name: Deploying Terraform
       shell: pwsh
       run: |
         # dirty hack to get the path to the action
