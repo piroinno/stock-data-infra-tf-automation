@@ -191,7 +191,7 @@ process {
     
     if ( $LASTEXITCODE -ne 0) {
         Write-Verbose "Cleaning up $($MyInvocation.MyCommand.Name)"
-        if (Test-Path -Path $TF_WORKING_TEMP_PATH) {
+        if (Test-Path $TF_WORKING_TEMP_PATH) {
             Write-Verbose "Removing $TF_WORKING_TEMP_PATH"
             Set-Location -Path $CURRENT_WORKING_PATH
             Remove-Item -Path $TF_WORKING_TEMP_PATH -Recurse -Force
