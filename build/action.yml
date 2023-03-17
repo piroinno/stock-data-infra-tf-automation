@@ -45,7 +45,7 @@ runs:
         $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
         $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
         
-        Invoke-Expression "$Script $($ScriptParams -join ' ')"
+        Invoke-Expression "$Script $($ScriptParams -join ' ') -Verbose"
       
     - name: Upload plan file
       uses: actions/upload-artifact@v2
