@@ -77,7 +77,7 @@ begin {
             Write-Error "ARM_SUBSCRIPTION_ID does not exist"
         }
         $env:TF_IS_AUTOMATION = "true"
-        az login --service-principal -u $env:ARM_CLIENT_ID -p $env:ARM_CLIENT_SECRET --tenant $env:ARM_TENANT_ID
+        az login --service-principal --allow-no-subscriptions -u $env:ARM_CLIENT_ID -p $env:ARM_CLIENT_SECRET --tenant $env:ARM_TENANT_ID
         az account set --subscription $env:ARM_SUBSCRIPTION_ID
     }
     else {
