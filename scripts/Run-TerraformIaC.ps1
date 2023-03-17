@@ -101,7 +101,7 @@ begin {
         Write-Error "TerraformConfigPath: $TerraformConfigPath does not exist"
     }
 
-    $TerraformTfVarsPath = Set-PathSlashes(("{0}/{1}/envs/{2}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment))
+    $TerraformTfVarsPath = (Set-PathSlashes(("{0}/{1}/envs/{2}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment)))
     if (Test-Path -Path $TerraformTfVarsPath) {
         Write-Verbose "TerraformTfVarsPath: $TerraformTfVarsPath"
     }
@@ -109,7 +109,7 @@ begin {
         Write-Error "TerraformTfVarsPath: $TerraformTfVarsPath does not exist"
     }
 
-    $TerraformTfBackendPath = Set-PathSlashes(("{0}/{1}/envs/{2}/{3}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment, "tf.backend"))
+    $TerraformTfBackendPath = (Set-PathSlashes(("{0}/{1}/envs/{2}/{3}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment, "tf.backend")))
     if (Test-Path -Path $TerraformTfBackendPath) {
         Write-Verbose "TerraformTfBackendPath: $TerraformTfBackendPath"
     }
