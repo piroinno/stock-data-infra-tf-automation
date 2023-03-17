@@ -58,4 +58,4 @@ runs:
       log_level: ${{ inputs.loglevel }}
       config_file: ${{ inputs.config_file }}
       baseline: ${{ env.TF_AUTO_WORKING_PATH }}
-      use_enforcement_rules: true
+      use_enforcement_rules: false
