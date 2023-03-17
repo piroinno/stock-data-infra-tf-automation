@@ -102,7 +102,7 @@ begin {
     }
 
     Write-Verbose "Setting TerraformTfVarsPath"
-    $TerraformTfVarsPath = (Set-PathSlashes(("{0}/{1}/envs/{2}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment)))
+    $TerraformTfVarsPath = (Set-PathSlashes(("{0}/envs/{1}" -f $TerraformConfigPath, $Environment)))
     if (Test-Path -Path $TerraformTfVarsPath) {
         Write-Verbose "TerraformTfVarsPath: $TerraformTfVarsPath"
     }
@@ -111,7 +111,7 @@ begin {
     }
 
     Write-Verbose "Setting TerraformTfBackendPath"
-    $TerraformTfBackendPath = (Set-PathSlashes(("{0}/{1}/envs/{2}/{3}" -f $LandingZoneNameRootPath, $ConfigurationFolder, $Environment, "tf.backend")))
+    $TerraformTfBackendPath = (Set-PathSlashes(("{0}/tf.backend" -f $TerraformTfVarsPath)))
     if (Test-Path -Path $TerraformTfBackendPath) {
         Write-Verbose "TerraformTfBackendPath: $TerraformTfBackendPath"
     }
