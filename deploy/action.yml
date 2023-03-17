@@ -40,7 +40,7 @@ runs:
       run: |
         # dirty hack to get the path to the action
         $BasePath = "${{ github.action_path }}" -replace '/build', ''
-        $Script = ".$BasePath/scripts/Run-TerraformIaC.ps1"
+        $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
         $ScriptParams =@()
         $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
         $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")

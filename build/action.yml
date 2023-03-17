@@ -34,7 +34,7 @@ runs:
       run: |
         # dirty hack to get the path to the action
         $BasePath = "${{ github.action_path }}" -replace '/build', ''
-        $Script = ".$BasePath/scripts/Run-TerraformIaC.ps1"
+        $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
         $ScriptParams =@()
         $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
         $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
@@ -44,7 +44,7 @@ runs:
         $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
         $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
         $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
-        Get-ChildItem . -Recurse
+        Get-ChildItem $BasePath -Recurse
         Invoke-Expression "$Script $($ScriptParams -join ' ')"
       
     - name: Upload plan file
