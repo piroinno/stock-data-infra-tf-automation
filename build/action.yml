@@ -37,14 +37,14 @@ runs:
         $BasePath = "${{ github.action_path }}" -replace '/build', ''
         $Script = ".$BasePath/scripts/Run-TerraformIaC.ps1"
         $ScriptParams =@()
-        $Script += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
-        $Script += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
-        $Script += ("-Environment", "${{ inputs.environment }}")
-        $Script += ("-TerraformPhase", "${{ inputs.terraformphase }}")
-        $Script += ("-AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}")))
-        $Script += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
-        $Script += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
-        $Script += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
+        $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
+        $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
+        $ScriptParams += ("-Environment", "${{ inputs.environment }}")
+        $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
+        $ScriptParams += ("-AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}")))
+        $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
+        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
+        $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
   
         Invoke-Expression $Script, $ScriptParams
       
