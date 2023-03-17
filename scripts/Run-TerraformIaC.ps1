@@ -103,6 +103,7 @@ begin {
 
     Write-Verbose "Setting TerraformTfVarsPath"
     $TerraformTfVarsPath = (Set-PathSlashes(("{0}/envs/{1}" -f $TerraformConfigPath, $Environment)))
+    Get-ChildItem $TerraformTfVarsPath -Recurse
     if (Test-Path -Path $TerraformTfVarsPath) {
         Write-Verbose "TerraformTfVarsPath: $TerraformTfVarsPath"
     }
