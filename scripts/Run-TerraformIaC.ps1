@@ -41,10 +41,10 @@ begin {
     . $PSScriptRoot\Set-PathSlashes.ps1
 
     if (Test-Path -Path $LandingZoneNameRootPath) {
-        Write-Verbose "LandingZoneNameRoot: $LandingZoneNameRootPath"
+        Write-Verbose "LandingZoneNameRootPath: $LandingZoneNameRootPath"
     }
     else {
-        Write-Error "LandingZoneNameRoot: $LandingZoneNameRootPath does not exist"
+        Write-Error "LandingZoneNameRootPath: $LandingZoneNameRootPath does not exist"
     }
 
     if ($AutomatedRun.IsPresent) {
@@ -175,11 +175,11 @@ process {
                 Write-Verbose "Terraform Plan File: $TerraformConfigPlanFilePath"
             }
             Invoke-Expression("terraform plan -lock-timeout=$TF_LOCK_TIMEOUT $TerraformConfigPlan")
+            Copy-Item -Path ((Set-PathSlashes((".\{0}" -f $TerraformConfigPlanFile)))) -Destination ((Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPlanFilePath, $TerraformConfigPlanFile)))) -Force -Verbose
             break
         }
         apply {
             Invoke-Expression("terraform apply $TerraformConfigPlanFilePath -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT")
-            Copy-Item -Path ((Set-PathSlashes((".\{0}" -f $TerraformConfigPlanFile)))) -Destination ((Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPlanFilePath, $TerraformConfigPlanFile)))) -Force -Verbose
             break
         }
         default {
