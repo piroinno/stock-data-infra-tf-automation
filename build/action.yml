@@ -1,29 +1,14 @@
 name: Plan terraform configuration
 description: "Plan terraform configuration"
 inputs:
-  landingzonenamerootpath:
-    description: "The root path of the landing zone"
-    required: true
   configurationfolder:
     description: "The folder of the configuration"
-    required: true
-  environment:
-    description: "The environment to deploy to"
     required: true
   terraformphase:
     description: "The terraform phase to run"
     required: true
   automatedrun:
     description: "If the run is automated or not"
-    required: true
-  terraformconfigplanfilepath:
-    description: "The path to the terraform configuration plan file"
-    required: true
-  terraformconfigplanfile:
-    description: "The name of the terraform configuration plan file"
-    required: true
-  terraformworkingpath:
-    description: "The path to the terraform working directory"
     required: true
 runs:
   using: "composite"
@@ -36,19 +21,19 @@ runs:
         $BasePath = "${{ github.action_path }}" -replace '/build', ''
         $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
         $ScriptParams =@()
-        $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
+        $ScriptParams += ("-LandingZoneNameRootPath", "${{ env.TF_LANDING_ZONE_ROOT_PATH }}")
         $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
-        $ScriptParams += ("-Environment", "${{ inputs.environment }}")
+        $ScriptParams += ("-Environment", "${{ env.ENVIRONMENT }}")
         $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
         $ScriptParams += (, "-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
-        $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
-        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
-        $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
-        
+        $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ env.TF_AUTO_WORKING_PATH }}")
+        $ScriptParams += ("-TerraformConfigPlanFile", "${{ env.TF_PLAN_FILE }}")
+        $ScriptParams += ("-TerraformWorkingPath", "${{ env.TF_AUTO_WORKING_PATH }}")
+
         Invoke-Expression "$Script $($ScriptParams -join ' ') -Verbose"
-      
+
     - name: Upload plan file
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ inputs.terraformconfigplanfile }}
-        path: ${{ inputs.terraformconfigplanfilepath }}/${{ inputs.terraformconfigplanfile }}
+        name: ${{ env.TF_PLAN_FILE }}
+        path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}

@@ -1,0 +1,78 @@
+name: Apply terraform configuration
+description: "Apply terraform configuration"
+inputs:
+  terraformconfigplanfilepath:
+    description: 'The path to the terraform configuration plan file'
+    required: true
+  terraformconfigplanfile:
+    description: 'The name of the terraform configuration plan file'
+    required: true
+  terraformworkingpath:
+    description: 'The path to the terraform working directory'
+    required: true
+  checks:
+    description: 'Checkov check'
+    required: false
+    default: CKV_AZURE_1
+  skipchecks:
+    description: 'Checkov skip check'
+    required: false
+    default: CKV_AZURE_2
+  softfail:
+    description: 'Checkov soft fail'
+    required: false
+    default: true
+  reportfilepath:
+    description: 'Checkov report file path'
+    required: false
+  reportfile:
+    description: 'Checkov report file'
+    required: false
+    default: checkov-report.sarif
+  enrichmenttfpath:
+    description: 'Checkov enrichment tf path'
+    required: false
+  enrichmentvarpath:
+    description: 'Checkov enrichment var path'
+    required: false
+  loglevel:
+    description: 'Checkov log level'
+    required: false
+    default: DEBUG
+  baselinepath:
+    description: 'Checkov baseline path'
+    required: false
+  configfile:
+    description: 'Checkov config file'
+    required: false
+    default: .checkov.yml
+    
+runs:
+  using: "composite"
+  steps:
+  - name: Download plan file
+    #if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+    uses: actions/download-artifact@v3
+    with:
+      name: ${{ env.TF_PLAN_FILE }}
+      path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
+
+  - name: Run Checkov action
+    id: checkov
+    uses: bridgecrewio/checkov-action@master
+    with:
+      file: ${{ input.terraformconfigplanfilepath }}/${{ inputs.terraformconfigplanfile }}
+      check: ${{ inputs.checks }}
+      skip_check: ${{ inputs.skipchecks }}
+      quiet: true
+      soft_fail: ${{ inputs.softfail }}
+      framework: terraform
+      output_format: sarif
+      output_file_path: ${{ inputs.reportfilepath }}/${{ inputs.reportfile }}
+      download_external_modules: true
+      repo_root_for_plan_enrichment: ${{ inputs.enrichmenttfpath }}
+      var_file: ${{ inputs.enrichmentvarpath }}
+      log_level: ${{ inputs.loglevel }}
+      config_file: ${{ inputs.config_file }}
+      baseline: ${{ inputs.baselinepath }}
+      use_enforcement_rules: true
