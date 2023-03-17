@@ -61,5 +61,5 @@ runs:
       var_file: ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}/envs/${{ env.ENVIROMENT }}
       log_level: ${{ inputs.loglevel }}
       config_file: ${{ inputs.config_file }}
-      baseline: ${{ inputs.baselinefile }}
+      baseline: ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}/${{ inputs.baselinefile }}
       use_enforcement_rules: false
