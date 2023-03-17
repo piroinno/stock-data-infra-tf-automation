@@ -152,7 +152,7 @@ begin {
 process {
     if ($TerraformPhase -in "plan", "apply", "destroy") {
         Write-Verbose "Starting Terraform Init"
-        Invoke-Expression("terraform init -backend-config=$TerraformTfBackendPath -input=false -lock-timeout=$TF_LOCK_TIMEOUT")
+        Invoke-Expression("terraform init -backend-config=`"$TerraformTfBackendPath`" -input=false -lock-timeout=$TF_LOCK_TIMEOUT")
     }
     
     switch ($TerraformPhase) {
