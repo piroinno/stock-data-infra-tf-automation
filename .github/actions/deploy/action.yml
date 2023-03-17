@@ -1,0 +1,44 @@
+name: Apply terraform configuration
+description: "Apply terraform configuration"
+inputs:
+  landingzonenamerootpath:
+    description: 'The root path of the landing zone'
+    required: true
+  configurationfolder:
+    description: 'The folder of the configuration'
+    required: true
+  environment:
+    description: 'The environment to deploy to'
+    required: true
+  terraformphase:
+    description: 'The terraform phase to run'
+    required: true
+  automatedrun:
+    description: 'If the run is automated or not'
+    required: true
+  terraformconfigplanfilepath:
+    description: 'The path to the terraform configuration plan file'
+    required: true
+  terraformconfigplanfile:
+    description: 'The name of the terraform configuration plan file'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Download plan file
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ inputs.terraformconfigplanfile }}
+        path: ${{ inputs.terraformconfigplanfilepath }}
+
+    - name: Deploying Terraform
+      if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' }}
+      shell: pwsh
+      run: |
+        ${{ github.action_path }}/scripts/Run-Terraform.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
+        -ConfigurationFolder ${{ inputs.configurationfolder }} `
+        -Environment ${{ inputs.environment }} `
+        -TerraformPhase ${{ inputs.terraformphase }} `
+        -AutomatedRun:${{ inputs.automatedrun }} `
+        -TerraformConfigPlanFilePath ${{ inputs.terraformconfigplanfilepath }} `
+        -TerraformConfigPlanFile ${{ inputs.terraformconfigplanfile }}
