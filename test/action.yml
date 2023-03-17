@@ -7,9 +7,6 @@ inputs:
   terraformconfigplanfile:
     description: 'The name of the terraform configuration plan file'
     required: true
-  terraformworkingpath:
-    description: 'The path to the terraform working directory'
-    required: true
   checks:
     description: 'Checkov check'
     required: false
@@ -21,7 +18,7 @@ inputs:
   softfail:
     description: 'Checkov soft fail'
     required: false
-    default: true
+    default: 'true'
   reportfilepath:
     description: 'Checkov report file path'
     required: false
@@ -54,14 +51,14 @@ runs:
     #if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
     uses: actions/download-artifact@v3
     with:
-      name: ${{ env.TF_PLAN_FILE }}
-      path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
+      name: ${{ env.terraformconfigplanfile }}
+      path: ${{ env.terraformconfigplanfilepath }}/${{ env.terraformconfigplanfile }}
 
   - name: Run Checkov action
     id: checkov
     uses: bridgecrewio/checkov-action@master
     with:
-      file: ${{ input.terraformconfigplanfilepath }}/${{ inputs.terraformconfigplanfile }}
+      file: ${{ env.terraformconfigplanfilepath }}/${{ env.terraformconfigplanfile }}
       check: ${{ inputs.checks }}
       skip_check: ${{ inputs.skipchecks }}
       quiet: true
