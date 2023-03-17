@@ -14,7 +14,6 @@ runs:
   using: "composite"
   steps:
     - name: Planning Terraform
-      #if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
       shell: pwsh
       run: |
         # dirty hack to get the path to the action
