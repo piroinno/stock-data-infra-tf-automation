@@ -40,7 +40,7 @@ runs:
       shell: pwsh
       run: |
         # dirty hack to get the path to the action
-        $BasePath = "${{ github.action_path }}" -replace 'build', ''
+        $BasePath = "${{ github.action_path }}" -replace '/build', ''
         .$BasePath/scripts/Run-Terraform.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
         -ConfigurationFolder ${{ inputs.configurationfolder }} `
         -Environment ${{ inputs.environment }} `
