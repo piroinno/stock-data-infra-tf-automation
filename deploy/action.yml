@@ -38,20 +38,20 @@ runs:
     - shell: bash
       run: ls -la ${{ inputs.terraformconfigplanfilepath }}
 
-    # - name: Deploying Terraform  
-    #   shell: pwsh
-    #   run: |
-    #     # dirty hack to get the path to the action
-    #     $BasePath = "${{ github.action_path }}" -replace '/deploy', ''
-    #     $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
-    #     $ScriptParams =@()
-    #     $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
-    #     $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
-    #     $ScriptParams += ("-Environment", "${{ inputs.environment }}")
-    #     $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
-    #     $ScriptParams += (,"-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
-    #     $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
-    #     $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
-    #     $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
+    - name: Deploying Terraform  
+      shell: pwsh
+      run: |
+        # dirty hack to get the path to the action
+        $BasePath = "${{ github.action_path }}" -replace '/deploy', ''
+        $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
+        $ScriptParams =@()
+        $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
+        $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
+        $ScriptParams += ("-Environment", "${{ inputs.environment }}")
+        $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
+        $ScriptParams += (,"-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
+        $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
+        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
+        $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
         
-    #     Invoke-Expression "$Script $($ScriptParams -join ' ')"
+        Invoke-Expression "$Script $($ScriptParams -join ' ')"
