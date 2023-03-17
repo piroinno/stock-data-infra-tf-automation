@@ -47,7 +47,7 @@ runs:
         $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
         $ScriptParams += ("-Environment", "${{ inputs.environment }}")
         $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
-        $ScriptParams += ("-AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}")))
+        $ScriptParams += ("-AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}"))")
         $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
         $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
         $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
