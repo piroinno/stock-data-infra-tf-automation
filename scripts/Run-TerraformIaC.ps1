@@ -116,7 +116,6 @@ begin {
     }
 
     Write-Verbose "Setting working directory to $TF_WORKING_TEMP_PATH"
-    New-Item -Path $TF_WORKING_TEMP_PATH -ItemType Directory -Force
     Set-Location -Path $TF_WORKING_TEMP_PATH
 
     Write-Verbose "Copying Resource Files from $TerraformConfigPath to $TF_WORKING_TEMP_PATH"
