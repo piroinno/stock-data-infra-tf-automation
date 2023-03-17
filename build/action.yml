@@ -33,9 +33,9 @@ runs:
       if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
       shell: pwsh
       run: |
-       # dirty hack to get the path to the action
+        # dirty hack to get the path to the action
         $BasePath = "${{ github.action_path }}" -replace '/build', ''
-        .$BasePath/scripts/Run-Terraform.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
+        .$BasePath/scripts/Run-TerraformIaC.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
         -ConfigurationFolder ${{ inputs.configurationfolder }} `
         -Environment ${{ inputs.environment }} `
         -TerraformPhase ${{ inputs.terraformphase }} `
