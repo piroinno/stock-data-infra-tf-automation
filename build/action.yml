@@ -33,7 +33,7 @@ runs:
       if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
       shell: pwsh
       run: |
-        ${{ github.action_path }}/scripts/Run-Terraform.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
+        ./${{ github.action_path }}/scripts/Run-Terraform.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
         -ConfigurationFolder ${{ inputs.configurationfolder }} `
         -Environment ${{ inputs.environment }} `
         -TerraformPhase ${{ inputs.terraformphase }} `
