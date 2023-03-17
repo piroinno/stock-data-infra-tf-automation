@@ -34,14 +34,14 @@ runs:
       run: |
         # dirty hack to get the path to the action
         $BasePath = "${{ github.action_path }}" -replace '/build', ''
-        .$BasePath/scripts/Run-TerraformIaC.ps1 -LandingZoneNameRootPath ${{ inputs.landingzonenamerootpath }} `
-        -ConfigurationFolder ${{ inputs.configurationfolder }} `
-        -Environment ${{ inputs.environment }} `
-        -TerraformPhase ${{ inputs.terraformphase }} `
+        .$BasePath/scripts/Run-TerraformIaC.ps1 -LandingZoneNameRootPath "${{ inputs.landingzonenamerootpath }}" `
+        -ConfigurationFolder "${{ inputs.configurationfolder }}" `
+        -Environment ${{ inputs.environment }}" `
+        -TerraformPhase ${{ inputs.terraformphase }}" `
         -AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}")) `
-        -TerraformConfigPlanFilePath ${{ inputs.terraformconfigplanfilepath }} `
-        -TerraformConfigPlanFile ${{ inputs.terraformconfigplanfile }}
-        -TerraformWorkingPath ${{ inputs.terraformworkingpath }}
+        -TerraformConfigPlanFilePath "${{ inputs.terraformconfigplanfilepath }}" `
+        -TerraformConfigPlanFile "${{ inputs.terraformconfigplanfile }}"
+        -TerraformWorkingPath "${{ inputs.terraformworkingpath }}"
       
     - name: Upload plan file
       uses: actions/upload-artifact@v2
