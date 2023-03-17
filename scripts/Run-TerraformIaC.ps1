@@ -32,11 +32,7 @@ begin {
     $CURRENT_WORKING_PATH = Get-Location
     trap {
         Write-Verbose "Cleaning up $($MyInvocation.MyCommand.Name)"
-        if ((Test-Path -Path $TF_WORKING_TEMP_PATH -ErrorAction 0)) {
-            Write-Verbose "Removing $TF_WORKING_TEMP_PATH"
-            Set-Location -Path $CURRENT_WORKING_PATH
-            Remove-Item -Path $TF_WORKING_TEMP_PATH -Recurse -Force
-        }
+        Set-Location -Path $CURRENT_WORKING_PATH
     }
     . $PSScriptRoot\Set-PathSlashes.ps1
 
@@ -191,11 +187,7 @@ process {
     
     if ( $LASTEXITCODE -ne 0) {
         Write-Verbose "Cleaning up $($MyInvocation.MyCommand.Name)"
-        if ((Test-Path $TF_WORKING_TEMP_PATH -ErrorAction 0)) {
-            Write-Verbose "Removing $TF_WORKING_TEMP_PATH"
-            Set-Location -Path $CURRENT_WORKING_PATH
-            Remove-Item -Path $TF_WORKING_TEMP_PATH -Recurse -Force
-        }
+        Set-Location -Path $CURRENT_WORKING_PATH
         Write-Error "Error found in deploying $TF_WORKING_TEMP_PATH. Exit code is: $LASTEXITCODE";
     }
     else {
@@ -204,11 +196,6 @@ process {
 }
 
 end {
-    Write-Verbose "Cleaning up $($MyInvocation.MyCommand.Name)"
-    if (Test-Path -Path $TF_WORKING_TEMP_PATH) {
-        Write-Verbose "Removing $TF_WORKING_TEMP_PATH"
-        Set-Location -Path $CURRENT_WORKING_PATH
-        Remove-Item -Path $TF_WORKING_TEMP_PATH -Recurse -Force
-    }
+    Set-Location -Path $CURRENT_WORKING_PATH
     Write-Verbose "Ending $($MyInvocation.MyCommand.Name)"
 }
