@@ -174,7 +174,7 @@ process {
         }
         apply {
             Write-Verbose "Starting Terraform Apply"
-            Invoke-Expression("terraform apply $((Set-PathSlashes(("./{0}" -f $TerraformConfigPlanFile)))) -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT")
+            Invoke-Expression("terraform apply $TerraformConfigPlanFile -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT")
             break
         }
         default {
