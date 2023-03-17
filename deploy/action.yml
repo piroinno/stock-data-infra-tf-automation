@@ -22,9 +22,9 @@ runs:
     - name: Display structure of downloaded files
       shell: bash
       run: |
-        ls -R
         ls -la tfplan
-        unzip tfplan
+        mv tfplan _tfplan && mv _tfplan/tfplan . && rm -rf _tfplan
+        ls -la
       working-directory: ${{ env.TF_AUTO_WORKING_PATH }}
     - name: Deploying Terraform
       shell: pwsh
