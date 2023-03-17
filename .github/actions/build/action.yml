@@ -22,6 +22,9 @@ inputs:
   terraformconfigplanfile:
     description: "The name of the terraform configuration plan file"
     required: true
+  terraformworkingpath:
+    description: "The path to the terraform working directory"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -36,6 +39,7 @@ runs:
         -AutomatedRun:${{ inputs.automatedrun }} `
         -TerraformConfigPlanFilePath ${{ inputs.terraformconfigplanfilepath }} `
         -TerraformConfigPlanFile ${{ inputs.terraformconfigplanfile }}
+        -TerraformWorkingPath ${{ inputs.terraformworkingpath }}
 
     - name: Upload plan file
       uses: actions/upload-artifact@v2
