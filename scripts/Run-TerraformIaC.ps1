@@ -52,6 +52,7 @@ begin {
             Write-Verbose "ARM_CLIENT_ID is Set"
         }
         else {
+            Write-Host $env:ARM_CLIENT_ID
             Write-Error "ARM_CLIENT_ID does not exist"
         }
 
