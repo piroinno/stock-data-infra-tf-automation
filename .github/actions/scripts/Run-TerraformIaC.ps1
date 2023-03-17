@@ -19,6 +19,9 @@ param (
     [string]
     $TerraformConfigPlanFile = $null,
     [Parameter()]
+    [string]
+    $TerraformWorkingPath,
+    [Parameter()]
     [switch]
     $AutomatedRun
 )
@@ -29,10 +32,10 @@ begin {
     $CURRENT_WORKING_PATH = Get-Location
     trap {
         Write-Verbose "Cleaning up $($MyInvocation.MyCommand.Name)"
-        if (Test-Path -Path $TF_WORKING_PATH) {
-            Write-Verbose "Removing $TF_WORKING_PATH"
+        if (Test-Path -Path $TerraformWorkingPath) {
+            Write-Verbose "Removing $TerraformWorkingPath"
             Set-Location -Path $CURRENT_WORKING_PATH
-            Remove-Item -Path $TF_WORKING_PATH -Recurse -Force
+            Remove-Item -Path $TerraformWorkingPath -Recurse -Force
         }
     }
     . $PSScriptRoot\Set-PathSlashes.ps1
@@ -112,18 +115,17 @@ begin {
         Write-Error "TerraformTfBackendPath: $TerraformTfBackendPath does not exist"
     }
 
-    $TF_WORKING_PATH = Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, $TF_WORKING_FOLDER))
-    New-Item -Path $TF_WORKING_PATH -ItemType Directory -Force
-    Set-Location -Path $TF_WORKING_PATH
-    Write-Verbose "TF_WORKING_PATH: $TF_WORKING_PATH"
-    Write-Verbose "Copying Resource Files from $TerraformConfigPath to $TF_WORKING_PATH"
-    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformConfigPath))) -Destination $TF_WORKING_PATH -Exclude $TF_WORKING_FOLDER, "envs", ".terraform" -Force -Verbose
+    New-Item -Path $TerraformWorkingPath -ItemType Directory -Force
+    Set-Location -Path $TerraformWorkingPath
+    Write-Verbose "TerraformWorkingPath: $TerraformWorkingPath"
+    Write-Verbose "Copying Resource Files from $TerraformConfigPath to $TerraformWorkingPath"
+    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformConfigPath))) -Destination $TerraformWorkingPath -Exclude $TF_WORKING_FOLDER, "envs", ".terraform" -Force -Verbose
 
-    Write-Verbose "Copying Terraform Variables from $TerraformTfVarsPath to $TF_WORKING_PATH"
-    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformTfVarsPath))) -Destination $TF_WORKING_PATH -Exclude $TF_WORKING_FOLDER -Force -Verbose
+    Write-Verbose "Copying Terraform Variables from $TerraformTfVarsPath to $TerraformWorkingPath"
+    Copy-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformTfVarsPath))) -Destination $TerraformWorkingPath -Exclude $TF_WORKING_FOLDER -Force -Verbose
     
-    Write-Verbose "Listing Files in $TF_WORKING_PATH"
-    Get-Item -Path (Set-PathSlashes(("{0}\*" -f $TF_WORKING_PATH)))
+    Write-Verbose "Listing Files in $TerraformWorkingPath"
+    Get-Item -Path (Set-PathSlashes(("{0}\*" -f $TerraformWorkingPath)))
 
     # Adding taint feature
     if ((Test-Path -Path (Set-PathSlashes(("{0}/{1}" -f $TerraformConfigPath, ".tftaint")))) -eq $true) {
@@ -183,24 +185,24 @@ process {
     
     if ( $LASTEXITCODE -ne 0) {
         Write-Verbose "Cleaning up $($MyInvocation.MyCommand.Name)"
-        if (Test-Path -Path $TF_WORKING_PATH) {
-            Write-Verbose "Removing $TF_WORKING_PATH"
+        if (Test-Path -Path $TerraformWorkingPath) {
+            Write-Verbose "Removing $TerraformWorkingPath"
             Set-Location -Path $CURRENT_WORKING_PATH
-            Remove-Item -Path $TF_WORKING_PATH -Recurse -Force
+            Remove-Item -Path $TerraformWorkingPath -Recurse -Force
         }
-        Write-Error "Error found in deploying $TF_WORKING_PATH. Exit code is: $LASTEXITCODE";
+        Write-Error "Error found in deploying $TerraformWorkingPath. Exit code is: $LASTEXITCODE";
     }
     else {
-        Write-Verbose "Terraform complete for $TF_WORKING_PATH";
+        Write-Verbose "Terraform complete for $TerraformWorkingPath";
     }
 }
 
 end {
     Write-Verbose "Cleaning up $($MyInvocation.MyCommand.Name)"
-    if (Test-Path -Path $TF_WORKING_PATH) {
-        Write-Verbose "Removing $TF_WORKING_PATH"
+    if (Test-Path -Path $TerraformWorkingPath) {
+        Write-Verbose "Removing $TerraformWorkingPath"
         Set-Location -Path $CURRENT_WORKING_PATH
-        Remove-Item -Path $TF_WORKING_PATH -Recurse -Force
+        Remove-Item -Path $TerraformWorkingPath -Recurse -Force
     }
     Write-Verbose "Ending $($MyInvocation.MyCommand.Name)"
 }
