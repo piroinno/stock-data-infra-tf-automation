@@ -48,7 +48,7 @@ runs:
         Invoke-Expression "$Script $($ScriptParams -join ' ') -Verbose"
       
     - name: Upload plan file
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.terraformconfigplanfile }}
-        path: ${{ inputs.terraformconfigplanfilepath }}
+        path: ${{ inputs.terraformconfigplanfilepath }}/${{ inputs.terraformconfigplanfile }}
