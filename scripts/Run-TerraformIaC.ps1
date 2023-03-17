@@ -175,7 +175,7 @@ process {
         apply {
             Write-Verbose "Starting Terraform Apply"
             Get-ChildItem . -Recurse
-            Invoke-Expression("terraform apply -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT $TerraformConfigPlanFile")
+            Invoke-Expression("terraform apply -chdir -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT $TerraformConfigPlanFile")
             break
         }
         default {
