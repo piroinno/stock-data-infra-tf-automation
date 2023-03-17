@@ -29,25 +29,26 @@ runs:
   using: "composite"
   steps:
     - name: Download plan file
+      #if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
       uses: actions/download-artifact@v3
       with:
         name: ${{ inputs.terraformconfigplanfile }}
-        path: ${{ inputs.terraformconfigplanfilepath }}/
+        path: ${{ inputs.terraformconfigplanfilepath }}
 
-    - name: Deploying Terraform  
-      shell: pwsh
-      run: |
-        # dirty hack to get the path to the action
-        $BasePath = "${{ github.action_path }}" -replace '/build', ''
-        $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
-        $ScriptParams =@()
-        $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
-        $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
-        $ScriptParams += ("-Environment", "${{ inputs.environment }}")
-        $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
-        $ScriptParams += (,"-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
-        $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
-        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
-        $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
+    # - name: Deploying Terraform  
+    #   shell: pwsh
+    #   run: |
+    #     # dirty hack to get the path to the action
+    #     $BasePath = "${{ github.action_path }}" -replace '/build', ''
+    #     $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
+    #     $ScriptParams =@()
+    #     $ScriptParams += ("-LandingZoneNameRootPath", "${{ inputs.landingzonenamerootpath }}")
+    #     $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
+    #     $ScriptParams += ("-Environment", "${{ inputs.environment }}")
+    #     $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
+    #     $ScriptParams += (,"-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
+    #     $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
+    #     $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
+    #     $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
         
-        Invoke-Expression "$Script $($ScriptParams -join ' ')"
+    #     Invoke-Expression "$Script $($ScriptParams -join ' ')"
