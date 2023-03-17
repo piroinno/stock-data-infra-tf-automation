@@ -7,6 +7,9 @@ inputs:
   terraformconfigplanfile:
     description: 'The name of the terraform configuration plan file'
     required: true
+  terraformworkingpath:
+    description: 'The path to the terraform working directory'
+    required: true
   checks:
     description: 'Checkov check'
     required: false
@@ -58,6 +61,7 @@ runs:
     id: checkov
     uses: bridgecrewio/checkov-action@master
     with:
+      directory: ${{ env.terraformworkingpath }}/
       file: ${{ env.terraformconfigplanfilepath }}/${{ env.terraformconfigplanfile }}
       check: ${{ inputs.checks }}
       skip_check: ${{ inputs.skipchecks }}
