@@ -28,13 +28,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
     - name: Download plan file
       uses: actions/download-artifact@v2
       with:
         name: ${{ inputs.terraformconfigplanfile }}
         path: ${{ inputs.terraformconfigplanfilepath }}
-
+    - uses: actions/checkout@v3
     - name: Deploying Terraform
       if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' }}
       shell: pwsh
@@ -47,9 +46,9 @@ runs:
         $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
         $ScriptParams += ("-Environment", "${{ inputs.environment }}")
         $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
-        $ScriptParams += ("-AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}"))")
+        $ScriptParams += ("","-AutomatedRun:$([bool]::Parse("${{ inputs.automatedrun }}"))")
         $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ inputs.terraformconfigplanfilepath }}")
         $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
         $ScriptParams += ("-TerraformWorkingPath", "${{ inputs.terraformworkingpath }}")
-  
+        
         Invoke-Expression "$Script $($ScriptParams -join ' ')"
