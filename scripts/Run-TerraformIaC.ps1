@@ -20,7 +20,7 @@ param (
     $TerraformConfigPlanFile = $null,
     [Parameter()]
     [string]
-    $TF_WORKING_TEMP_PATH,
+    $TerraformWorkingPath,
     [Parameter()]
     [switch]
     $AutomatedRun
