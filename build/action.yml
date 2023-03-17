@@ -43,12 +43,7 @@ runs:
         -TerraformConfigPlanFilePath ${{ inputs.terraformconfigplanfilepath }} `
         -TerraformConfigPlanFile ${{ inputs.terraformconfigplanfile }}
         -TerraformWorkingPath ${{ inputs.terraformworkingpath }}
-      env:
-        ARM_CLIENT_ID: ${{ env.ARM_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ env.ARM_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ env.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ env.ARM_TENANT_ID }}
-        
+      
     - name: Upload plan file
       uses: actions/upload-artifact@v2
       with:
