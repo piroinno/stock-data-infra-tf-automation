@@ -37,7 +37,7 @@ runs:
   using: "composite"
   steps:
   - name: Download plan file
-    #if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+
     uses: actions/download-artifact@v3
     with:
       name: ${{ env.TF_PLAN_FILE }}

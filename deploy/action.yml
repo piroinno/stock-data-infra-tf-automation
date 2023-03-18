@@ -18,6 +18,7 @@ runs:
       with:
         name: ${{ env.TF_PLAN_FILE }}
         path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
+
     - name: Fixing plan file path
       shell: bash
       run: |
