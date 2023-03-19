@@ -32,6 +32,9 @@ inputs:
     description: 'Checkov baseline file'
     required: false
     default: ".checkov.baseline"
+  terraformconfigplanfile:
+    description: "The terraform plan file"
+    required: true
     
 runs:
   using: "composite"
@@ -53,7 +56,7 @@ runs:
     uses: bridgecrewio/checkov-action@master
     with:
       directory: ${{ env.TF_AUTO_WORKING_PATH }}/
-      file: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
+      file: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}
       check: ${{ inputs.checks }}
       skip_check: ${{ inputs.skipchecks }}
       quiet: true

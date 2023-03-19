@@ -10,9 +10,17 @@ inputs:
   automatedrun:
     description: "If the run is automated or not"
     required: true
+  terraformconfigplanfile:
+    description: "The terraform plan file"
+    required: true
+    
 runs:
   using: "composite"
   steps:
+    - name: Lint Terraform
+      uses: actionshub/terraform-lint@main
+      working-directory: ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}
+
     - name: Planning Terraform
       shell: pwsh
       run: |
@@ -26,7 +34,7 @@ runs:
         $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
         $ScriptParams += (, "-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
         $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ env.TF_AUTO_WORKING_PATH }}")
-        $ScriptParams += ("-TerraformConfigPlanFile", "${{ env.TF_PLAN_FILE }}")
+        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
         $ScriptParams += ("-TerraformWorkingPath", "${{ env.TF_AUTO_WORKING_PATH }}")
 
         Invoke-Expression "$Script $($ScriptParams -join ' ') -Verbose"
@@ -42,5 +50,5 @@ runs:
     - name: Upload plan file
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.TF_PLAN_FILE }}
-        path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
+        name: ${{ inputs.terraformconfigplanfile }}
+        path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}

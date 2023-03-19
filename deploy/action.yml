@@ -10,14 +10,18 @@ inputs:
   automatedrun:
     description: "If the run is automated or not"
     required: true
+  terraformconfigplanfile:
+    description: "The terraform plan file"
+    required: true
+    
 runs:
   using: "composite"
   steps:
     - name: Download plan file
       uses: actions/download-artifact@v3
       with:
-        name: ${{ env.TF_PLAN_FILE }}
-        path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
+        name: ${{ inputs.terraformconfigplanfile }}
+        path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}
 
     - name: Fixing plan file path
       shell: bash
@@ -37,7 +41,7 @@ runs:
         $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
         $ScriptParams += (, "-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
         $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ env.TF_AUTO_WORKING_PATH }}")
-        $ScriptParams += ("-TerraformConfigPlanFile", "${{ env.TF_PLAN_FILE }}")
+        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
         $ScriptParams += ("-TerraformWorkingPath", "${{ env.TF_AUTO_WORKING_PATH }}")
         
         Invoke-Expression "$Script $($ScriptParams -join ' ')"
