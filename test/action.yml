@@ -49,7 +49,8 @@ runs:
   - name: Fixing plan file path
     shell: bash
     run: |
-      mv tfplan _tfplan && mv _tfplan/tfplan . && rm -rf _tfplan
+      cd ${{ env.TF_AUTO_WORKING_PATH }}
+      mv ${{ inputs.terraformconfigplanfile }} _${{ inputs.terraformconfigplanfile }} && mv _${{ inputs.terraformconfigplanfile }}/${{ inputs.terraformconfigplanfile }} . && rm -rf _${{ inputs.terraformconfigplanfile }}
 
   - name: Run Checkov action
     id: checkov

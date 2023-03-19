@@ -26,6 +26,7 @@ runs:
     - name: Fixing plan file path
       shell: bash
       run: |
+        cd ${{ env.TF_AUTO_WORKING_PATH }}
         mv ${{ inputs.terraformconfigplanfile }} _${{ inputs.terraformconfigplanfile }} && mv _${{ inputs.terraformconfigplanfile }}/${{ inputs.terraformconfigplanfile }} . && rm -rf _${{ inputs.terraformconfigplanfile }}
       
       working-directory: ${{ env.TF_AUTO_WORKING_PATH }}
