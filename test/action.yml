@@ -43,8 +43,8 @@ runs:
 
     uses: actions/download-artifact@v3
     with:
-      name: ${{ env.TF_PLAN_FILE }}
-      path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ env.TF_PLAN_FILE }}
+      name: ${{ inputs.terraformconfigplanfile }}
+      path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}
 
   - name: Fixing plan file path
     shell: bash
