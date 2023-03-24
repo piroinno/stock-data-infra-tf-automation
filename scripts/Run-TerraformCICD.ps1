@@ -146,7 +146,7 @@ begin {
 process {
     if ($TerraformPhase -in "plan", "apply", "destroy") {
         Write-Verbose "Starting Terraform Init"
-        Invoke-Expression("terraform init -backend-config=`"$TerraformTfBackendPath`" -input=false -lock-timeout=$TF_LOCK_TIMEOUT")
+        Invoke-Expression("terraform init -upgrade -backend-config=`"$TerraformTfBackendPath`" -input=false -lock-timeout=$TF_LOCK_TIMEOUT")
     }
     
     switch ($TerraformPhase) {
@@ -174,8 +174,12 @@ process {
         }
         apply {
             Write-Verbose "Starting Terraform Apply"
-            Get-ChildItem . -Recurse
             Invoke-Expression("terraform -chdir=`"$TF_WORKING_TEMP_PATH`" apply -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT `"$TerraformConfigPlanFile`"")
+            break
+        }
+        destory {
+            Write-Verbose "Starting Terraform Destroy"
+            Invoke-Expression("terraform -chdir=`"$TF_WORKING_TEMP_PATH`" destory -auto-approve -lock-timeout=$TF_LOCK_TIMEOUT `"$TerraformConfigPlanFile`"")
             break
         }
         default {
@@ -196,6 +200,7 @@ process {
 }
 
 end {
+    Write-Verbose "$TF_WORKING_TEMP_PATH has been planned to $TerraformConfigPlanFilePath/$TerraformConfigPlanFile"
     Set-Location -Path $CURRENT_WORKING_PATH
     Write-Verbose "Ending $($MyInvocation.MyCommand.Name)"
 }

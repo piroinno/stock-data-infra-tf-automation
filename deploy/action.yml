@@ -35,7 +35,7 @@ runs:
       run: |
         # dirty hack to get the path to the action
         $BasePath = "${{ github.action_path }}" -replace '/deploy', ''
-        $Script = "$BasePath/scripts/Run-TerraformIaC.ps1"
+        $Script = "$BasePath/scripts/Run-TerraformCICD.ps1"
         $ScriptParams =@()
         $ScriptParams += ("-LandingZoneNameRootPath", "${{ env.TF_LANDING_ZONE_ROOT_PATH }}")
         $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
