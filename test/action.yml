@@ -1,0 +1,74 @@
+name: Apply terraform configuration
+description: "Apply terraform configuration"
+inputs:
+  configurationfolder:
+    description: "The folder of the configuration"
+    required: true
+  checks:
+    description: 'Checkov check'
+    required: false
+    default: CKV_AZURE_1
+  skipchecks:
+    description: 'Checkov skip check'
+    required: false
+    default: CKV_AZURE_2
+  softfail:
+    description: 'Checkov soft fail'
+    required: false
+    default: 'true'
+  reportfile:
+    description: 'Checkov report file'
+    required: false
+    default: checkov-report.sarif
+  loglevel:
+    description: 'Checkov log level'
+    required: false
+    default: DEBUG
+  configfile:
+    description: 'Checkov config file'
+    required: false
+    default: ""
+  baselinefile:
+    description: 'Checkov baseline file'
+    required: false
+    default: ".checkov.baseline"
+  terraformconfigplanfile:
+    description: "The terraform plan file"
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+  - name: Download plan file
+
+    uses: actions/download-artifact@v3
+    with:
+      name: ${{ inputs.terraformconfigplanfile }}
+      path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}
+
+  - name: Fixing plan file path
+    shell: bash
+    run: |
+      cd ${{ env.TF_AUTO_WORKING_PATH }}
+      mv ${{ inputs.terraformconfigplanfile }} _${{ inputs.terraformconfigplanfile }} && mv _${{ inputs.terraformconfigplanfile }}/${{ inputs.terraformconfigplanfile }} . && rm -rf _${{ inputs.terraformconfigplanfile }}
+
+  - name: Run Checkov action
+    id: checkov
+    uses: bridgecrewio/checkov-action@master
+    with:
+      directory: ${{ env.TF_AUTO_WORKING_PATH }}/
+      file: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}
+      check: ${{ inputs.checks }}
+      skip_check: ${{ inputs.skipchecks }}
+      quiet: true
+      soft_fail: ${{ inputs.softfail }}
+      framework: terraform
+      output_format: sarif
+      output_file_path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.reportfile }}
+      download_external_modules: true
+      repo_root_for_plan_enrichment: ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}
+      var_file: ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}/envs/${{ env.ENVIROMENT }}
+      log_level: ${{ inputs.loglevel }}
+      config_file: ${{ inputs.config_file }}
+      baseline: ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}/${{ inputs.baselinefile }}
+      use_enforcement_rules: false
