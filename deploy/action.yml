@@ -1,0 +1,49 @@
+name: Apply terraform configuration
+description: "Apply terraform configuration"
+inputs:
+  configurationfolder:
+    description: "The folder of the configuration"
+    required: true
+  terraformphase:
+    description: "The terraform phase to run"
+    required: true
+  automatedrun:
+    description: "If the run is automated or not"
+    required: true
+  terraformconfigplanfile:
+    description: "The terraform plan file"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download plan file
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.terraformconfigplanfile }}
+        path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}
+
+    - name: Fixing plan file path
+      shell: bash
+      run: |
+        cd ${{ env.TF_AUTO_WORKING_PATH }}
+        mv ${{ inputs.terraformconfigplanfile }} _${{ inputs.terraformconfigplanfile }} && mv _${{ inputs.terraformconfigplanfile }}/${{ inputs.terraformconfigplanfile }} . && rm -rf _${{ inputs.terraformconfigplanfile }}
+      
+      working-directory: ${{ env.TF_AUTO_WORKING_PATH }}
+    - name: Deploying Terraform
+      shell: pwsh
+      run: |
+        # dirty hack to get the path to the action
+        $BasePath = "${{ github.action_path }}" -replace '/deploy', ''
+        $Script = "$BasePath/scripts/Run-TerraformCICD.ps1"
+        $ScriptParams =@()
+        $ScriptParams += ("-LandingZoneNameRootPath", "${{ env.TF_LANDING_ZONE_ROOT_PATH }}")
+        $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
+        $ScriptParams += ("-Environment", "${{ env.ENVIRONMENT }}")
+        $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
+        $ScriptParams += (, "-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
+        $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ env.TF_AUTO_WORKING_PATH }}")
+        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
+        $ScriptParams += ("-TerraformWorkingPath", "${{ env.TF_AUTO_WORKING_PATH }}")
+        
+        Invoke-Expression "$Script $($ScriptParams -join ' ')"

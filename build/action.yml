@@ -1,0 +1,59 @@
+name: Plan terraform configuration
+description: "Plan terraform configuration"
+inputs:
+  configurationfolder:
+    description: "The folder of the configuration"
+    required: true
+  terraformphase:
+    description: "The terraform phase to run"
+    required: true
+  automatedrun:
+    description: "If the run is automated or not"
+    required: true
+  terraformconfigplanfile:
+    description: "The terraform plan file"
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+    # - name: Lint Terraform
+    #   shell: bash
+    #   run: |
+    #     cd ${{ env.TF_LANDING_ZONE_ROOT_PATH }}/${{ inputs.configurationfolder }}
+    #     if [[ -n "$(terraform fmt -check -recursive -diff)" ]]; then
+    #       echo "Some terraform files need to be formatted. Run 'terraform fmt -recursive' to fix them.";
+    #       exit 1;
+    #     fi
+
+    - name: Planning Terraform
+      shell: pwsh
+      run: |
+        # dirty hack to get the path to the action
+        $BasePath = "${{ github.action_path }}" -replace '/build', ''
+        $Script = "$BasePath/scripts/Run-TerraformCICD.ps1"
+        $ScriptParams =@()
+        $ScriptParams += ("-LandingZoneNameRootPath", "${{ env.TF_LANDING_ZONE_ROOT_PATH }}")
+        $ScriptParams += ("-ConfigurationFolder", "${{ inputs.configurationfolder }}")
+        $ScriptParams += ("-Environment", "${{ env.ENVIRONMENT }}")
+        $ScriptParams += ("-TerraformPhase", "${{ inputs.terraformphase }}")
+        $ScriptParams += (, "-AutomatedRun:`$$([bool]::Parse("${{ inputs.automatedrun }}"))")
+        $ScriptParams += ("-TerraformConfigPlanFilePath", "${{ env.TF_AUTO_WORKING_PATH }}")
+        $ScriptParams += ("-TerraformConfigPlanFile", "${{ inputs.terraformconfigplanfile }}")
+        $ScriptParams += ("-TerraformWorkingPath", "${{ env.TF_AUTO_WORKING_PATH }}")
+
+        Invoke-Expression "$Script $($ScriptParams -join ' ') -Verbose"
+
+    # - uses: robburger/terraform-pr-commenter@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     commenter_type: fmt/init/plan/validate # Choose one
+    #     commenter_input: ${{ format('{0}{1}', steps.step_id.outputs.stdout, steps.step_id.outputs.stderr) }}
+    #     commenter_exitcode: ${{ steps.step_id.outputs.exitcode }}
+        
+    - name: Upload plan file
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.terraformconfigplanfile }}
+        path: ${{ env.TF_AUTO_WORKING_PATH }}/${{ inputs.terraformconfigplanfile }}
